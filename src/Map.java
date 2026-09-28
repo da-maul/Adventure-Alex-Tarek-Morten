@@ -65,7 +65,7 @@ public class Map {
         //setting light levels
         lightRoom(1); lightRoom(2); lightRoom(4); lightRoom(10);
         // setting room items
-        roomAddItem(1,"lamp"); roomAddItem(1,"Tarek");
+        roomAddItem(1,"lamp"); roomAddItem(1,"Tarek"); roomAddItem(5,"bag of gold");
         //Room descriptions
         roomAddDesc(1, """
                 Light filters into this room from a hole in the ceiling, bathing it in a pale glow.

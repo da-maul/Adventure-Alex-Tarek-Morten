@@ -16,6 +16,7 @@ public class Player {
     //descibes the room
     public void describeRoom(){
         IO.println(currentRoom.getDescription());
+        //item related display
         if (currentRoom.getItems().size()==0){
             return;
         } else if (getCurrentRoom().getItems().size() == 1) {

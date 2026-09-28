@@ -6,7 +6,7 @@ public class ConsoleUI {
     Player player = new Player();
     Map map;
     // commands is displayed when HELP action is called, probably should be an Enum
-    String[] commands = {"NORTH","EAST","SOUTH","WEST","LIGHT","DARKNESS","XYZZY","HELP","EXIT"};
+    String[] commands = {"NORTH","EAST","SOUTH","WEST","LIGHT","DARKNESS","XYZZY","TAKE","DROP","INVENTORY","HELP","EXIT"};
     // A little ugly but these checks need to be here so they work in run()
     // as well as other methods so they can be set in a clean way
     boolean tryInput = true; // <- might not be needed?
