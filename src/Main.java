@@ -6,7 +6,7 @@ void main() {
 
 }
 
-//comment for Tarek/Morten
+//comment for Tarek and Morten
 
 // I'm not in class today, because I have a doctor's appointment, but I do know how to finish the last bit
 // of the assignment that we need. I'll write things out to you in a list of steps.

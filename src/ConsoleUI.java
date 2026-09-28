@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class ConsoleUI {
     // The methods in this class are a little disorganized
     // feel free to rearrange them if it bothers you.
@@ -22,20 +24,22 @@ public class ConsoleUI {
             IO.println("You are in the "+ roomName());
             if (roomIsLit()) {describeRoom();}
             else {describeDarkRoom();}
-            //input loop plays until player makes a valid move
-            tryInput = true;
-            while (tryInput) {
+
+            // Get all commands from one line of input
+            ArrayList<Command> commands = inputParse();
+            // Execute every command before asking for new input
+            for (Command command : commands) {
                 resetLoopBools();
-                switch (promptPlayer()) {
+                switch (command.command()) {
                     case "NORTH" -> moveNorth();
                     case "EAST" -> moveEast();
                     case "SOUTH" -> moveSouth();
                     case "WEST" -> moveWest();
-                    case "XYZZY" -> xyzzy();
+                    case "XYZZY" -> xyzzy(command.target());
                     case "LIGHT" -> castLight();
                     case "DARKNESS" -> castDark();
-                    case "TAKE" -> take();
-                    case "DROP" -> drop();
+                    case "TAKE" -> take(command.target());
+                    case "DROP" -> drop(command.target());
                     case "INVENTORY" -> describeInventory();
                     case "HELP" -> help();
                     case "EXIT" -> {return;}
@@ -100,23 +104,50 @@ public class ConsoleUI {
 
     private void describeInventory(){player.describeInventory();}
 
-    private String promptPlayer(){
-        // method takes input and boils them down
-        String input = IO.readln("What do you do?");
-        // correct inputs do not need to be changed and are handled by "default"
-        input = input.toUpperCase();
-        switch (input){
-            case "GO NORTH", "N" -> input = "NORTH";
-            case "GO EAST", "E" -> input = "EAST";
-            case "GO SOUTH", "S" -> input = "SOUTH";
-            case "GO WEST", "W" -> input = "WEST";
-            case "CAST LIGHT", "TURN ON LIGHT", "L" -> input = "LIGHT";
-            case "CAST DARKNESS", "TURN OFF LIGHT", "D" -> input = "DARKNESS";
-            case "X" -> input = "XYZZY";
-            case "H", "HELP ME", "UH", "UM", "" -> input = "HELP";
-            default -> {return input;}
+    private ArrayList<Command> inputParse(){
+        String input = IO.readln("What do you do?").toUpperCase();
+        String [] words = input.split(" ");
+        ArrayList<Command> commandsFound = new ArrayList<>();
+        String currentCommand = null;
+        for (String word : words){
+            switch (word) {
+                // Ignorer ord som "GO", "ME", "ON", "OFF"
+                case "GO", "ME", "ON", "OFF" -> {}
+                // Movement
+                case "GO NORTH", "N" -> commandsFound.add(new Command("NORTH", ""));
+                case "GO EAST", "E" -> commandsFound.add(new Command("EAST", ""));
+                case "GO SOUTH", "S" -> commandsFound.add(new Command("SOUTH", ""));
+                case "GO WEST", "W" -> commandsFound.add(new Command("WEST", ""));
+                // Magie / Lys
+                case "CAST LIGHT", "TURN ON LIGHT", "L" -> commandsFound.add(new Command("LIGHT", ""));
+                case "CAST DARKNESS", "TURN OFF LIGHT", "D" -> commandsFound.add(new Command("DARKNESS", ""));
+                // Handlinger der KRÆVER et target (f.eks. TAKE LAMP)
+                case "X", "XYZZY" -> currentCommand = "XYZZY";
+                case "TAKE", "T" -> currentCommand = "TAKE";
+                case "DROP", "d" -> currentCommand = "DROP";
+
+                case "INVENTORY" -> {
+                    commandsFound.add(new Command("INVENTORY", ""));
+                    currentCommand = null;
+                }
+                case "HELP", "HELP ME", "H" -> {
+                    commandsFound.add(new Command("HELP", ""));
+                    currentCommand = null;
+                }
+                case "EXIT" -> {
+                    commandsFound.add(new Command("EXIT", ""));
+                    currentCommand = null;
+                }
+                default -> {
+                    // Hvis ordet ikke er en kommando,
+                    // er det muligvis et target.
+                    if (currentCommand != null) {
+                        commandsFound.add(new Command(currentCommand, word));
+                    }
+                }
+            }
         }
-        return input;
+        return commandsFound;
     }
 
     public boolean moveNorth(){
@@ -140,21 +171,19 @@ public class ConsoleUI {
         else {playerFailedToMove = true; return false;}
     }
 
-    public boolean xyzzy(){
+    public boolean xyzzy(String target){
         playerTeleported = true; tryInput = false;
         //unfortunately no other way to write this line
-        return player.xyzzyP(map.getRooms());
+        return player.xyzzyP(map.getRooms(),target);
     }
 
-    public void take(){
-        String desiredItem = IO.readln("What do you want to take?");
+    public void take(String desiredItem){
         if (!player.addItem(desiredItem)){
             IO.println("There's nothing like that here...");
         }
         else {IO.println("You take the "+ desiredItem);}
     }
-    public void drop(){
-        String desiredItem = IO.readln("What do you want to drop?");
+    public void drop(String desiredItem){
         if (!player.removeItem(desiredItem)){
             IO.println("You don't have anything like that...");
         }

@@ -81,8 +81,13 @@ public class Player {
     // Player version of Xyzzy spell, takes in an arraylist of the rooms in the Map.
     // Would technically be easier to put in the consoleUI, but I don't want the teachers to explode seeing
     // movement-related code OUTSIDE of the Player Class
-    public boolean xyzzyP(ArrayList<Room> rooms){
-        int roomNumber = Integer.parseInt(IO.readln("Where do you want to teleport?"));
+
+    public boolean xyzzyP(ArrayList<Room> rooms, String target){
+        int roomNumber;
+        try { roomNumber = Integer.parseInt(target);}
+        catch (NumberFormatException e) {
+            return false;
+        }
         //verifying that the room in question is actually in the array
         if (rooms == null || roomNumber < 1 || roomNumber > rooms.size())
         {return false;}
@@ -95,15 +100,17 @@ public class Player {
 
     //item searching methods
     public Item itemSearch(ArrayList<Item> items, String itemName){
-        int index=0;
+        if (itemName == null || items == null) {
+            return null;
+        }
         for (Item item : items){
-            Item currentItem = items.get(index);
-            String currentItemName = currentItem.getName();
-            if (itemName.equals(currentItemName)){return currentItem;}
-            index++;
+            if (itemName.equalsIgnoreCase(item.getName())){
+                return item;
+            }
         }
         return null;
     }
+
     public Item itemSelfSearch(String itemName){
         return itemSearch(items, itemName);
     }
