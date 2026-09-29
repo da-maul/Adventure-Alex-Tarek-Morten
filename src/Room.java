@@ -29,7 +29,7 @@ public class Room {
         this.isLit = lit;}
     //item related setters
     public void addItem(Item item){items.add(item);}
-    public void addItem(String itemName){addItem(new Item(itemName));}
+    public void addItem(String itemShortName, String itemLongName){addItem(new Item(itemShortName,itemLongName));}
     public void removeItem(Item item){items.remove(item);}
 
     //getters
