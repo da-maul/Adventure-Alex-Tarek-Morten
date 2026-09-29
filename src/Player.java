@@ -132,7 +132,11 @@ public class Player {
         if (itemToBeEaten == null){IO.println("There's nothing like "+foodName+" here...");}
         else if (itemToBeEaten instanceof Food){
             modHealth(((Food) itemToBeEaten).healthChange);
-            IO.println("You ate the "+itemToBeEaten.getShortName());
+            if (itemToBeEaten.getShortName().equals("tarek")){
+                IO.println("You ate "+itemToBeEaten.getShortName()+", he was delicious but you feel like a monster...");
+                IO.println("You feel sick to your stomach...");
+            }
+            else {IO.println("You ate the "+itemToBeEaten.getShortName());}
             ateSomething = true;
         }
         else {IO.println("No matter how much you want to, "+ itemToBeEaten.getShortName()+" is not edible...");}
