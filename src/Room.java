@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Room {
     private final String name;
     private String description;
@@ -6,6 +8,7 @@ public class Room {
     private Room south;
     private Room west;
     private boolean isLit = true;
+    private ArrayList<Item> items = new ArrayList<>();
 
     //Constructor is basic because most of a room is created in the "roomsInit" method in the Adventure class
     public Room(String name){
@@ -24,11 +27,16 @@ public class Room {
         if(west != null){this.west = west;}}
     public void setLit(boolean lit) {
         this.isLit = lit;}
+    //item related setters
+    public void addItem(Item item){items.add(item);}
+    public void addItem(String itemName){addItem(new Item(itemName));}
+    public void removeItem(Item item){items.remove(item);}
 
     //getters
     public String getName() {return name;}
     public String getDescription() {return description;}
     public boolean isLit() {return isLit;}
+    public ArrayList<Item> getItems() {return items;}
 
     //directional getters return this room if no room exists in that direction
     public Room getNorth() {
