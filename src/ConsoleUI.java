@@ -118,15 +118,15 @@ public class ConsoleUI {
         for (String word : words){
             switch (word) {
                 // Ignorer ord som "GO", "ME", "ON", "OFF"
-                case "GO", "ME", "ON", "OFF" -> {}
+                case "GO", "ME", "ON", "OFF", "THE" -> {}
                 // Movement
-                case "GO NORTH", "N" -> commandsFound.add(new Command("NORTH", ""));
-                case "GO EAST", "E" -> commandsFound.add(new Command("EAST", ""));
-                case "GO SOUTH", "S" -> commandsFound.add(new Command("SOUTH", ""));
-                case "GO WEST", "W" -> commandsFound.add(new Command("WEST", ""));
+                case "NORTH", "N" -> commandsFound.add(new Command("NORTH", ""));
+                case "EAST", "E" -> commandsFound.add(new Command("EAST", ""));
+                case "SOUTH", "S" -> commandsFound.add(new Command("SOUTH", ""));
+                case "WEST", "W", "WEAST" -> commandsFound.add(new Command("WEST", ""));
                 // Magie / Lys
-                case "CAST LIGHT", "TURN ON LIGHT", "L" -> commandsFound.add(new Command("LIGHT", ""));
-                case "CAST DARKNESS", "TURN OFF LIGHT", "DK" -> commandsFound.add(new Command("DARKNESS", ""));
+                case "LIGHT", "TURN ON LIGHT", "L" -> commandsFound.add(new Command("LIGHT", ""));
+                case "DARKNESS", "TURN OFF LIGHT", "DK" -> commandsFound.add(new Command("DARKNESS", ""));
                 // Handlinger der KRÆVER et target (f.eks. TAKE LAMP)
                 case "X", "XYZZY" -> currentCommand = "XYZZY";
                 case "TAKE", "T", "GRAB" -> currentCommand = "TAKE";
@@ -137,7 +137,7 @@ public class ConsoleUI {
                     currentCommand = null;
                 }
                 case "HEALTH", "HP", "STATUS" -> commandsFound.add(new Command("HEALTH",""));
-                case "HELP", "HELP ME", "H" -> {
+                case "HELP", "H" -> {
                     commandsFound.add(new Command("HELP", ""));
                     currentCommand = null;
                 }
