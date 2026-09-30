@@ -3,16 +3,21 @@ import java.util.ArrayList;
 public class Player {
     private Room currentRoom;
     private ArrayList<Item> items = new ArrayList<>();
+    private int health = 100;
 
     //getters
     public Room getCurrentRoom() {return currentRoom;}
     public String roomName(){return currentRoom.getName();}
     public boolean roomIsLit(){return currentRoom.isLit();}
+    public int getHealth() {return health;}
 
     //setters
     public void setStartingRoom(Room startingRoom) {currentRoom = startingRoom;}
     public void lightRoom(){currentRoom.setLit(true);}
     public void darkRoom(){currentRoom.setLit(false);}
+    public void setHealth(int health) {this.health = health;}
+    public void modHealth(int healthMod){this.health += healthMod;}
+
     //descibes the room
     public void describeRoom(){
         IO.println(currentRoom.getDescription());
@@ -39,6 +44,7 @@ public class Player {
             for (Item item: items){
             IO.println(item); //candidate for adding LONG NAME here
             }
+            IO.println();
         }
     }
     //item related setters
@@ -104,7 +110,7 @@ public class Player {
             return null;
         }
         for (Item item : items){
-            if (itemName.equalsIgnoreCase(item.getName())){
+            if (itemName.equalsIgnoreCase(item.getShortName())){
                 return item;
             }
         }
@@ -116,5 +122,26 @@ public class Player {
     }
     public Item itemRoomSearch(String itemName){
         return itemSearch(currentRoom.getItems(), itemName);
+    }
+
+    public void eat(String foodName){
+        Item itemToBeEaten; boolean ignoreInventory = false; boolean ateSomething = false;
+        itemToBeEaten = itemRoomSearch(foodName);
+        if (itemToBeEaten!=null){ignoreInventory = true;}
+        if (!ignoreInventory){itemToBeEaten = itemSelfSearch(foodName);}
+        if (itemToBeEaten == null){IO.println("There's nothing like "+foodName+" here...");}
+        else if (itemToBeEaten instanceof Food){
+            modHealth(((Food) itemToBeEaten).healthChange);
+            if (itemToBeEaten.getShortName().equals("tarek")){
+                IO.println("You ate "+itemToBeEaten.getShortName()+", he was delicious but you feel like a monster...");
+                IO.println("You feel sick to your stomach...");
+            }
+            else {IO.println("You ate the "+itemToBeEaten.getShortName());}
+            ateSomething = true;
+        }
+        else {IO.println("No matter how much you want to, "+ itemToBeEaten.getShortName()+" is not edible...");}
+        if (ignoreInventory && ateSomething){removeItemRoom(itemToBeEaten);}
+        else if(ateSomething){removeItemSelf(itemToBeEaten);}
+        if (health > 100) {setHealth(100);}
     }
 }

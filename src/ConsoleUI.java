@@ -15,16 +15,20 @@ public class ConsoleUI {
     boolean playerTeleported = false;
     boolean spellWasCast = false;
     boolean playerFailedToMove = false;
+    //only for the purpose of describing the room or not for move/non-move inputs;
+    boolean playerMoved = true;
 
     //main loop happens here
     public void run(Map map){
         initialize(map);
         while (true){
-            //describes the room before input is accepted
-            IO.println("You are in the "+ roomName());
-            if (roomIsLit()) {describeRoom();}
-            else {describeDarkRoom();}
-
+            if (checkIfDead()){return;}
+            if (playerMoved){
+                //describes the room before input is accepted
+                IO.println("You are in the "+ roomName());
+                if (roomIsLit()) {describeRoom();}
+                else {describeDarkRoom();}
+            }
             // Get all commands from one line of input
             ArrayList<Command> commands = inputParse();
             // Execute every command before asking for new input
@@ -40,7 +44,9 @@ public class ConsoleUI {
                     case "DARKNESS" -> castDark();
                     case "TAKE" -> take(command.target());
                     case "DROP" -> drop(command.target());
+                    case "EAT" -> eat(command.target());
                     case "INVENTORY" -> describeInventory();
+                    case "HEALTH" -> sayhealth();
                     case "HELP" -> help();
                     case "EXIT" -> {return;}
                 }
@@ -69,17 +75,17 @@ public class ConsoleUI {
         IO.print("Commands are: ");
         for (String command :commands){IO.print(command+", ");}
         IO.println(); //just to add some white space after
-        tryInput = true;
+        tryInput = true; playerMoved=false;
     }
 
     private void castDark() {
         player.darkRoom();
-        playerTeleported = true; spellWasCast = true; tryInput = false;
+        playerTeleported = true; spellWasCast = true; tryInput = false; playerMoved=false;
     }
 
     private void castLight() {
         player.lightRoom();
-        playerTeleported = true; spellWasCast = true; tryInput = false;
+        playerTeleported = true; spellWasCast = true; tryInput = false; playerMoved=false;
     }
 
     private void resetLoopBools() {
@@ -102,7 +108,7 @@ public class ConsoleUI {
 
     private void describeRoom() {player.describeRoom();}
 
-    private void describeInventory(){player.describeInventory();}
+    private void describeInventory(){player.describeInventory(); playerMoved=false;}
 
     private ArrayList<Command> inputParse(){
         String input = IO.readln("What do you do?").toUpperCase();
@@ -112,29 +118,30 @@ public class ConsoleUI {
         for (String word : words){
             switch (word) {
                 // Ignorer ord som "GO", "ME", "ON", "OFF"
-                case "GO", "ME", "ON", "OFF" -> {}
+                case "GO", "ME", "ON", "OFF", "THE" -> {}
                 // Movement
-                case "GO NORTH", "N" -> commandsFound.add(new Command("NORTH", ""));
-                case "GO EAST", "E" -> commandsFound.add(new Command("EAST", ""));
-                case "GO SOUTH", "S" -> commandsFound.add(new Command("SOUTH", ""));
-                case "GO WEST", "W" -> commandsFound.add(new Command("WEST", ""));
+                case "NORTH", "N" -> commandsFound.add(new Command("NORTH", ""));
+                case "EAST", "E" -> commandsFound.add(new Command("EAST", ""));
+                case "SOUTH", "S" -> commandsFound.add(new Command("SOUTH", ""));
+                case "WEST", "W", "WEAST" -> commandsFound.add(new Command("WEST", ""));
                 // Magie / Lys
-                case "CAST LIGHT", "TURN ON LIGHT", "L" -> commandsFound.add(new Command("LIGHT", ""));
-                case "CAST DARKNESS", "TURN OFF LIGHT", "D" -> commandsFound.add(new Command("DARKNESS", ""));
+                case "LIGHT", "TURN ON LIGHT", "L" -> commandsFound.add(new Command("LIGHT", ""));
+                case "DARKNESS", "TURN OFF LIGHT", "DK" -> commandsFound.add(new Command("DARKNESS", ""));
                 // Handlinger der KRÆVER et target (f.eks. TAKE LAMP)
                 case "X", "XYZZY" -> currentCommand = "XYZZY";
-                case "TAKE", "T" -> currentCommand = "TAKE";
-                case "DROP", "d" -> currentCommand = "DROP";
-
-                case "INVENTORY" -> {
+                case "TAKE", "T", "GRAB" -> currentCommand = "TAKE";
+                case "DROP", "D", "REMOVE" -> currentCommand = "DROP";
+                case "EAT", "NOM", "CONSUME", "SCARF", "NIBBLE", "INHALE" -> currentCommand = "EAT";
+                case "INVENTORY", "INV", "I", "STUFF" -> {
                     commandsFound.add(new Command("INVENTORY", ""));
                     currentCommand = null;
                 }
-                case "HELP", "HELP ME", "H" -> {
+                case "HEALTH", "HP", "STATUS" -> commandsFound.add(new Command("HEALTH",""));
+                case "HELP", "H" -> {
                     commandsFound.add(new Command("HELP", ""));
                     currentCommand = null;
                 }
-                case "EXIT" -> {
+                case "EXIT", "EX", "QUIT" -> {
                     commandsFound.add(new Command("EXIT", ""));
                     currentCommand = null;
                 }
@@ -152,27 +159,27 @@ public class ConsoleUI {
 
     public boolean moveNorth(){
         if (player.moveNorth()){
-            tryInput = false; return true;}
-        else {playerFailedToMove = true; return false;}
+            tryInput = false; playerMoved=true; return true;}
+        else {playerFailedToMove = true; playerMoved=false; return false;}
     }
     public boolean moveEast(){
         if (player.moveEast()){
-            tryInput = false; return true;}
-        else {playerFailedToMove = true; return false;}
+            tryInput = false; playerMoved=true; return true;}
+        else {playerFailedToMove = true; playerMoved=false; return false;}
     }
     public boolean moveSouth(){
         if (player.moveSouth()){
-            tryInput = false; return true;}
-        else {playerFailedToMove = true; return false;}
+            tryInput = false; playerMoved=true; return true;}
+        else {playerFailedToMove = true; playerMoved=false; return false;}
     }
     public boolean moveWest(){
         if (player.moveWest()){
-            tryInput = false; return true;}
-        else {playerFailedToMove = true; return false;}
+            tryInput = false; playerMoved=true; return true;}
+        else {playerFailedToMove = true; playerMoved=false; return false;}
     }
 
     public boolean xyzzy(String target){
-        playerTeleported = true; tryInput = false;
+        playerTeleported = true; playerMoved=true; tryInput = false;
         //unfortunately no other way to write this line
         return player.xyzzyP(map.getRooms(),target);
     }
@@ -182,12 +189,23 @@ public class ConsoleUI {
             IO.println("There's nothing like that here...");
         }
         else {IO.println("You take the "+ desiredItem);}
+        playerMoved=false;
     }
     public void drop(String desiredItem){
         if (!player.removeItem(desiredItem)){
             IO.println("You don't have anything like that...");
         }
         else {IO.println("You drop the "+ desiredItem);}
+        playerMoved=false;
+    }
+
+    public void eat(String desiredFood){player.eat(desiredFood); sayhealth(); playerMoved=false;}
+    public void sayhealth(){IO.println("Current Health: " +player.getHealth()); playerMoved=false;}
+    public boolean checkIfDead(){
+        if (player.getHealth() <= 0){
+            IO.println("You have died, RIP Bozo"); return true;
+        }
+        else {return false;}
     }
 
 }

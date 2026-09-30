@@ -1,12 +1,14 @@
 public class Item {
-    String name;
+    String shortName;
+    String longName;
 
-    public Item(String name){this.name=name;}
+    public Item(String shortName, String longName){this.shortName = shortName; this.longName=longName;}
 
-    public String getName() {return name;}
+    public String getLongName() {return longName;}
+    public String getShortName() {return shortName;}
 
     @Override
     public String toString() {
-        return name;
+        return longName;
     }
 }

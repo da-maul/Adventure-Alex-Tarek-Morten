@@ -9,7 +9,8 @@ public class Map {
     //various setters required for initialization
     private void newRoom(String name){rooms.add(new Room(name));}
     private void roomAddDesc(int roomNumber,String description){rooms.get(roomNumber-1).setDescription(description);}
-    private void roomAddItem(int roomNumber, String itemName){rooms.get(roomNumber-1).addItem(itemName);}
+    private void roomAddItem(int roomNumber, String itemShortName, String itemLongName){rooms.get(roomNumber-1).addItem(itemShortName, itemLongName);}
+    private void roomAddItem(int roomNumber, Item item){rooms.get(roomNumber-1).addItem(item);}
 
     private void roomSetDirs(int roomNumber, int northNum, int eastNum, int southNum, int westNum){
         //sets adjacent rooms by room number(int), first is the room whose neighbors are being set.
@@ -64,8 +65,12 @@ public class Map {
         roomSetDirs(10,0,0,0,0);
         //setting light levels
         lightRoom(1); lightRoom(2); lightRoom(4); lightRoom(10);
+        // initializing valid items
+        Food tarek = new Food("tarek", "some guy named Tarek", -100);
+        Food curry = new Food("curry", "some hot spicy curry", 10);
         // setting room items
-        roomAddItem(1,"lamp"); roomAddItem(1,"Tarek"); roomAddItem(5,"bag of gold");
+        roomAddItem(1,"lamp", "an old oil lamp"); roomAddItem(1,tarek); roomAddItem(5,"gold", "a bag of gold");
+        roomAddItem(1, curry);
         //Room descriptions
         roomAddDesc(1, """
                 Light filters into this room from a hole in the ceiling, bathing it in a pale glow.
