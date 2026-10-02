@@ -24,7 +24,7 @@ public class ConsoleUI {
         while (true){
             if (checkIfDead()){return;}
             if (playerMoved){
-                //describes the room before input is accepted
+                //describes the room before input is accepted if player didn´t move.
                 IO.println("You are in the "+ roomName());
                 if (roomIsLit()) {describeRoom();}
                 else {describeDarkRoom();}
@@ -45,6 +45,8 @@ public class ConsoleUI {
                     case "TAKE" -> take(command.target());
                     case "DROP" -> drop(command.target());
                     case "EAT" -> eat(command.target());
+                    case "EQUIP" -> equip(command.target());
+                    case "ATTACK" -> attack();
                     case "INVENTORY" -> describeInventory();
                     case "HEALTH" -> sayhealth();
                     case "HELP" -> help();
@@ -112,7 +114,7 @@ public class ConsoleUI {
 
     private ArrayList<Command> inputParse(){
         String input = IO.readln("What do you do?").toUpperCase();
-        String [] words = input.split(" ");
+        String[] words = input.split(" ");
         ArrayList<Command> commandsFound = new ArrayList<>();
         String currentCommand = null;
         for (String word : words){
@@ -132,6 +134,8 @@ public class ConsoleUI {
                 case "TAKE", "T", "GRAB" -> currentCommand = "TAKE";
                 case "DROP", "D", "REMOVE" -> currentCommand = "DROP";
                 case "EAT", "NOM", "CONSUME", "SCARF", "NIBBLE", "INHALE" -> currentCommand = "EAT";
+                case "EQUIP", "BRANDISH" ,"WIELD" -> currentCommand = "EQUIP";
+                case "ATTACK", "SWING", "SHOOT", "FIRE", "THRUST", "A" -> commandsFound.add(new Command("ATTACK",""));
                 case "INVENTORY", "INV", "I", "STUFF" -> {
                     commandsFound.add(new Command("INVENTORY", ""));
                     currentCommand = null;
@@ -198,8 +202,10 @@ public class ConsoleUI {
         else {IO.println("You drop the "+ desiredItem);}
         playerMoved=false;
     }
+    public void equip(String desiredWeapon){player.equip(desiredWeapon); playerMoved=false;}
 
     public void eat(String desiredFood){player.eat(desiredFood); sayhealth(); playerMoved=false;}
+    public void attack(){player.attack(); playerMoved = false;}
     public void sayhealth(){IO.println("Current Health: " +player.getHealth()); playerMoved=false;}
     public boolean checkIfDead(){
         if (player.getHealth() <= 0){
@@ -207,5 +213,4 @@ public class ConsoleUI {
         }
         else {return false;}
     }
-
 }
