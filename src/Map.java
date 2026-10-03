@@ -68,9 +68,13 @@ public class Map {
         // initializing valid items
         Food tarek = new Food("tarek", "some guy named Tarek", -100);
         Food curry = new Food("curry", "some hot spicy curry", 10);
+        //initializing valid weapons
+        Weapon bow = new Weapon("bow", "a twangy recurve bow (and some arrows)",5);
+        Weapon axe = new Weapon("axe", "a old rusty axe");
         // setting room items
         roomAddItem(1,"lamp", "an old oil lamp"); roomAddItem(1,tarek); roomAddItem(5,"gold", "a bag of gold");
-        roomAddItem(1, curry);
+        roomAddItem(1, curry); roomAddItem(4, axe); roomAddItem(1, bow);
+        //setting room weapons
         //Room descriptions
         roomAddDesc(1, """
                 Light filters into this room from a hole in the ceiling, bathing it in a pale glow.
