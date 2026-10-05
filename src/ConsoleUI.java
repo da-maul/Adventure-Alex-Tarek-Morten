@@ -113,6 +113,15 @@ public class ConsoleUI {
     private void describeInventory(){player.describeInventory(); playerMoved=false;}
 
     private ArrayList<Command> inputParse(){
+        //this method is such a monster
+        //basically tokenizes the input string, ignores the first row of tokens
+        //looks for valid "command" words, and then once it finds one, makes a new 'command' record object
+        //behaviors depends on if the command does or does not have a target.
+        //targetless commands simply make a command object with a blank target
+        //commands with targets will make new command objects with every following word as target
+        //until a new command is found, after which, that command makes new commands with targets
+        //allows the player to input "eat curry attack tarek" all on one line, both commands will be executed
+        //hypothetically also allows attack tarek tarek to attack tarek twice
         String input = IO.readln("What do you do?").toUpperCase();
         String[] words = input.split(" ");
         ArrayList<Command> commandsFound = new ArrayList<>();
@@ -181,7 +190,6 @@ public class ConsoleUI {
             tryInput = false; playerMoved=true; return true;}
         else {playerFailedToMove = true; playerMoved=false; return false;}
     }
-
     public boolean xyzzy(String target){
         playerTeleported = true; playerMoved=true; tryInput = false;
         //unfortunately no other way to write this line
@@ -205,7 +213,11 @@ public class ConsoleUI {
     public void equip(String desiredWeapon){player.equip(desiredWeapon); playerMoved=false;}
 
     public void eat(String desiredFood){player.eat(desiredFood); sayhealth(); playerMoved=false;}
-    public void attack(){player.attack(); playerMoved = false;}
+
+    public void attack(){
+        //TODO this method needs a rewrite
+        player.attack(); playerMoved = false;
+    }
     public void sayhealth(){IO.println("Current Health: " +player.getHealth()); playerMoved=false;}
     public boolean checkIfDead(){
         if (player.getHealth() <= 0){

@@ -54,10 +54,19 @@ public class Player {
             IO.println("There is a " + currentRoom.getItems().get(0) + " in here...");
         } else {
             IO.println("There are some things in here:");
-            int index = 0;
             for (Item item : currentRoom.getItems()) {
-                IO.println(item); //candidate for adding LONG NAME here
-                index++;
+                IO.println(item);
+            }
+        }
+        if (currentRoom.getMonsters().size() == 0){
+            return;
+        } else if (currentRoom.getMonsters().size() == 1) {
+            IO.println("Watch out! there's "+currentRoom.getMonsters().get(0)+" in here!");
+        }
+        else {
+            IO.println("Theres monsters in here!");
+            for (Monster monster: currentRoom.getMonsters()){
+                IO.println(monster);
             }
         }
     }
