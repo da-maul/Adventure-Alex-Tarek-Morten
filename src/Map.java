@@ -11,7 +11,10 @@ public class Map {
     private void roomAddDesc(int roomNumber,String description){rooms.get(roomNumber-1).setDescription(description);}
     private void roomAddItem(int roomNumber, String itemShortName, String itemLongName){rooms.get(roomNumber-1).addItem(itemShortName, itemLongName);}
     private void roomAddItem(int roomNumber, Item item){rooms.get(roomNumber-1).addItem(item);}
-    private void roomAddMonster(int roomNumber, Monster monster){rooms.get(roomNumber-1).addMonster(monster);}
+    private void roomAddMonster(int roomNumber, Monster monster){
+        rooms.get(roomNumber-1).addMonster(monster);
+        monster.setHome(rooms.get(roomNumber-1));
+    }
 
     private void roomSetDirs(int roomNumber, int northNum, int eastNum, int southNum, int westNum){
         //sets adjacent rooms by room number(int), first is the room whose neighbors are being set.

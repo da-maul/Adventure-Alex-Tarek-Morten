@@ -271,25 +271,10 @@ public class Player {
         }
     }
 
-    public void attack(){
-        if (equippedWeapon.canUse()){
-            if (equippedWeapon.isRanged()){
-                //be sure to add target here later
-                IO.println("You shoot your "+ equippedWeapon.getShortName()+" at the air...");
-                equippedWeapon.modAmmunition(-1);
-            }
-            else {
-                //be sure to add target here later
-                IO.println("You swing your "+equippedWeapon.getShortName()+" at the air like you just don´t care...");
-            }
+    public int attack(String target){
+        if (equippedWeapon != null){
+            return equippedWeapon.attack(target);
         }
-        else {
-            if (equippedWeapon.equals(null)){
-                IO.println("You don´t have anything to attack with!");
-            }
-            else {
-                IO.println("Your "+equippedWeapon.getShortName()+" is out of ammo!");
-            }
-        }
+        else return 0;
     }
 }

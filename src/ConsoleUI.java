@@ -215,8 +215,9 @@ public class ConsoleUI {
     public void eat(String desiredFood){player.eat(desiredFood); sayhealth(); playerMoved=false;}
 
     public void attack(){
-        //TODO this method needs a rewrite
-        player.attack(); playerMoved = false;
+        //TODO this method needs a rewrite, does not work right now.
+        String target = "placeholder";
+        player.attack(target); playerMoved = false;
     }
     public void sayhealth(){IO.println("Current Health: " +player.getHealth()); playerMoved=false;}
     public boolean checkIfDead(){

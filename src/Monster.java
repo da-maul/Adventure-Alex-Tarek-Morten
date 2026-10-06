@@ -20,7 +20,7 @@ public class Monster {
     }
 
     //getters
-    public boolean isDead(){return HP > 0;}
+    public boolean isDead(){return HP <= 0;}
     public String getShortName() {return shortName;}
     public String getLongName() {return longName;}
     public Weapon getWeapon() {return weapon;}
