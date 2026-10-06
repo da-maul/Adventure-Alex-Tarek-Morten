@@ -21,7 +21,7 @@ public class WeaponRanged extends Weapon{
         if (target == null){target = "nothing in particular, wasting a shot.";}
         if (canUse()){
             IO.println("You "+attackVerb+" your "+shortName+" at "+target);
-            return damage;
+            return -damage;
         }
         else {IO.println("Your "+shortName+" is out of ammo!");return 0;}
     }

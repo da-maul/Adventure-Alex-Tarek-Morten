@@ -46,7 +46,7 @@ public class ConsoleUI {
                     case "DROP" -> drop(command.target());
                     case "EAT" -> eat(command.target());
                     case "EQUIP" -> equip(command.target());
-                    case "ATTACK" -> attack();
+                    case "ATTACK" -> attack(command.target());
                     case "INVENTORY" -> describeInventory();
                     case "HEALTH" -> sayhealth();
                     case "HELP" -> help();
@@ -144,7 +144,7 @@ public class ConsoleUI {
                 case "DROP", "D", "REMOVE" -> currentCommand = "DROP";
                 case "EAT", "NOM", "CONSUME", "SCARF", "NIBBLE", "INHALE" -> currentCommand = "EAT";
                 case "EQUIP", "BRANDISH" ,"WIELD" -> currentCommand = "EQUIP";
-                case "ATTACK", "SWING", "SHOOT", "FIRE", "THRUST", "A" -> commandsFound.add(new Command("ATTACK",""));
+                case "ATTACK", "SWING", "SHOOT", "FIRE", "THRUST", "A" -> currentCommand = "ATTACK";
                 case "INVENTORY", "INV", "I", "STUFF" -> {
                     commandsFound.add(new Command("INVENTORY", ""));
                     currentCommand = null;
@@ -214,10 +214,8 @@ public class ConsoleUI {
 
     public void eat(String desiredFood){player.eat(desiredFood); sayhealth(); playerMoved=false;}
 
-    public void attack(){
-        //TODO this method needs a rewrite, does not work right now.
-        String target = "placeholder";
-        player.attack(target); playerMoved = false;
+    public void attack(String desiredMonster){
+        player.attack(desiredMonster); playerMoved = false;
     }
     public void sayhealth(){IO.println("Current Health: " +player.getHealth()); playerMoved=false;}
     public boolean checkIfDead(){

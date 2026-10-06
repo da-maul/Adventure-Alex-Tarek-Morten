@@ -73,9 +73,9 @@ public class Map {
         Food tarekBody = new Food("tarek", "Tarek's bloody corpse", -100);
         Food curry = new Food("curry", "some hot spicy curry", 10);
         //initializing valid weapons
-        Weapon bow = new Weapon("bow", "a twangy recurve bow (and some arrows)", 30, 5);
-        Weapon axe = new Weapon("axe", "a old rusty axe", 20);
-        Weapon derringer = new Weapon("derringer", "a tiny derringer pistol",1,2);
+        Weapon bow = new WeaponRanged("bow", "a twangy recurve bow (and some arrows)","fire", 30, 5);
+        Weapon axe = new WeaponMelee("axe", "a old rusty axe","swing", 20);
+        Weapon derringer = new WeaponRanged("derringer", "a tiny derringer pistol","shoot",1,2);
         //initializing valid monsters
         Monster tarek = new Monster("tarek", "some guy named Tarek", 1);
         tarek.giveWeapon(derringer); tarek.giveItem(tarekBody);

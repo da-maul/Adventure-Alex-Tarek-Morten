@@ -30,6 +30,11 @@ public class Room {
         this.isLit = lit;}
     //item related setters
     public void addItem(Item item){items.add(item);}
+    public void addItems(ArrayList<Item> itemList){
+        for (Item item : itemList){
+            items.add(item);
+        }
+    }
     public void addItem(String itemShortName, String itemLongName){addItem(new Item(itemShortName,itemLongName));}
     public void removeItem(Item item){items.remove(item);}
     public void addMonster(Monster monster){monsters.add(monster);}

@@ -14,6 +14,6 @@ public class WeaponMelee extends Weapon{
     public int attack(String target) {
         if (target == null){target = "the air, like you just don't care...";}
         IO.println("You "+attackVerb+" your "+shortName+" at "+target+"!");
-        return damage;
+        return -damage;
     }
 }

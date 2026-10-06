@@ -33,6 +33,10 @@ public class Monster {
     public void giveItems(ArrayList<Item> items) {this.deathItems = items;}
     public void giveItem(Item item) {this.deathItems.add(item);}
 
+    public void attack(Player player) {
+        player.modHealth(weapon.attack("you"));
+    }
+
     @Override
     public String toString() {
         return longName;
