@@ -1,0 +1,1 @@
+public record AttackReturn(Boolean canUse, String attackVerb,String weaponName,String failTarget, int damage){}

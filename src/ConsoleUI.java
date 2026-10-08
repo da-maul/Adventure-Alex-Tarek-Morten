@@ -46,7 +46,7 @@ public class ConsoleUI {
                     case "DROP" -> drop(command.target());
                     case "EAT" -> eat(command.target());
                     case "EQUIP" -> equip(command.target());
-                    case "ATTACK" -> attack();
+                    case "ATTACK" -> attack(command.target());
                     case "INVENTORY" -> describeInventory();
                     case "HEALTH" -> sayhealth();
                     case "HELP" -> help();
@@ -113,6 +113,15 @@ public class ConsoleUI {
     private void describeInventory(){player.describeInventory(); playerMoved=false;}
 
     private ArrayList<Command> inputParse(){
+        //this method is such a monster
+        //basically tokenizes the input string, ignores the first row of tokens
+        //looks for valid "command" words, and then once it finds one, makes a new 'command' record object
+        //behaviors depends on if the command does or does not have a target.
+        //targetless commands simply make a command object with a blank target
+        //commands with targets will make new command objects with every following word as target
+        //until a new command is found, after which, that command makes new commands with targets
+        //allows the player to input "eat curry attack tarek" all on one line, both commands will be executed
+        //hypothetically also allows attack tarek tarek to attack tarek twice
         String input = IO.readln("What do you do?").toUpperCase();
         String[] words = input.split(" ");
         ArrayList<Command> commandsFound = new ArrayList<>();
@@ -135,7 +144,7 @@ public class ConsoleUI {
                 case "DROP", "D", "REMOVE" -> currentCommand = "DROP";
                 case "EAT", "NOM", "CONSUME", "SCARF", "NIBBLE", "INHALE" -> currentCommand = "EAT";
                 case "EQUIP", "BRANDISH" ,"WIELD" -> currentCommand = "EQUIP";
-                case "ATTACK", "SWING", "SHOOT", "FIRE", "THRUST", "A" -> commandsFound.add(new Command("ATTACK",""));
+                case "ATTACK","HIT","SWING","SLASH","SHOOT","FIRE","THRUST","KILL", "A" -> currentCommand = "ATTACK";
                 case "INVENTORY", "INV", "I", "STUFF" -> {
                     commandsFound.add(new Command("INVENTORY", ""));
                     currentCommand = null;
@@ -181,7 +190,6 @@ public class ConsoleUI {
             tryInput = false; playerMoved=true; return true;}
         else {playerFailedToMove = true; playerMoved=false; return false;}
     }
-
     public boolean xyzzy(String target){
         playerTeleported = true; playerMoved=true; tryInput = false;
         //unfortunately no other way to write this line
@@ -205,7 +213,63 @@ public class ConsoleUI {
     public void equip(String desiredWeapon){player.equip(desiredWeapon); playerMoved=false;}
 
     public void eat(String desiredFood){player.eat(desiredFood); sayhealth(); playerMoved=false;}
-    public void attack(){player.attack(); playerMoved = false;}
+
+    public void attack(String target){
+        //player needs to be armed before anything else
+        if (!player.isArmed()){IO.println("You don't have a weapon!");playerMoved = false; return;}
+        //AttackReturns contain a lot of info about the weapon.
+        //occurs to me that I probably could have just passed through the WEAPON itself
+        //but like, IDK, I already wrote this, and it'll work... so...
+        AttackReturn pAttackReturn = player.attack();
+
+        //unpacking our AttackReturn into more readable variables
+        boolean canAttack = pAttackReturn.canUse();
+        String verb = pAttackReturn.attackVerb();
+        String weapon = pAttackReturn.weaponName();
+        String failTarget = pAttackReturn.failTarget();
+        int damage = pAttackReturn.damage();
+
+        Monster monsterTarget = player.monsterSearch(target);
+        String monsterName = monsterTarget.shortName;
+        if (!canAttack){
+            IO.println("Your "+weapon+" is out of ammo!");
+        }
+        else if (monsterTarget == null){
+            IO.println("You "+verb+" your "+weapon+" at "+failTarget);
+        }
+        else {
+            IO.println("You "+verb+" your "+weapon+" at "+monsterName+", dealing "+damage+" damage!");
+            monsterTarget.modHP(-damage);
+        }
+        if (monsterTarget.isDead()){
+            IO.println("The "+monsterName+" crumples to the flood in a heap, dead...");
+            if (monsterTarget.hasItems()){
+                IO.println("It drops some items on the floor:");
+                for (Item item : monsterTarget.getDeathItems()){
+                    IO.println(item);
+                }
+                monsterTarget.dropItems();
+            }
+        }
+        else {
+            //Monster's turn to attack
+            AttackReturn mAttackReturn = monsterTarget.attack();
+            canAttack = mAttackReturn.canUse();
+            verb = mAttackReturn.attackVerb();
+            weapon = mAttackReturn.weaponName();
+            failTarget = mAttackReturn.failTarget();
+            damage = mAttackReturn.damage();
+
+            if (!canAttack){
+                IO.println("The "+monsterName+" is defenceless!");
+            }
+            else {
+                IO.println("The "+monsterName+" "+verb+"s its "+weapon+" at you! dealing "+damage+" damage!!!");
+                player.modHealth(-damage);
+            }
+        }
+         playerMoved = false;
+    }
     public void sayhealth(){IO.println("Current Health: " +player.getHealth()); playerMoved=false;}
     public boolean checkIfDead(){
         if (player.getHealth() <= 0){

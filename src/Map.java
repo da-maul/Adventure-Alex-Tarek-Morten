@@ -11,6 +11,10 @@ public class Map {
     private void roomAddDesc(int roomNumber,String description){rooms.get(roomNumber-1).setDescription(description);}
     private void roomAddItem(int roomNumber, String itemShortName, String itemLongName){rooms.get(roomNumber-1).addItem(itemShortName, itemLongName);}
     private void roomAddItem(int roomNumber, Item item){rooms.get(roomNumber-1).addItem(item);}
+    private void roomAddMonster(int roomNumber, Monster monster){
+        rooms.get(roomNumber-1).addMonster(monster);
+        monster.setHome(rooms.get(roomNumber-1));
+    }
 
     private void roomSetDirs(int roomNumber, int northNum, int eastNum, int southNum, int westNum){
         //sets adjacent rooms by room number(int), first is the room whose neighbors are being set.
@@ -66,15 +70,23 @@ public class Map {
         //setting light levels
         lightRoom(1); lightRoom(2); lightRoom(4); lightRoom(10);
         // initializing valid items
-        Food tarek = new Food("tarek", "some guy named Tarek", -100);
+        Food tarekBody = new Food("tarek", "Tarek's bloody corpse", -100);
         Food curry = new Food("curry", "some hot spicy curry", 10);
         //initializing valid weapons
-        Weapon bow = new Weapon("bow", "a twangy recurve bow (and some arrows)",5);
-        Weapon axe = new Weapon("axe", "a old rusty axe");
+        Weapon bow = new WeaponRanged("bow", "a twangy recurve bow (and some arrows)","fire", 30, 5);
+        Weapon axe = new WeaponMelee("axe", "a old rusty axe","swing", 20);
+        Weapon derringer = new WeaponRanged("derringer", "a tiny derringer pistol","shoot",100,2);
+        //initializing valid monsters
+        Monster tarek = new Monster("tarek", "some guy named Tarek", 100);
+        tarek.giveWeapon(derringer); tarek.giveItem(tarekBody);
+
         // setting room items
-        roomAddItem(1,"lamp", "an old oil lamp"); roomAddItem(1,tarek); roomAddItem(5,"gold", "a bag of gold");
-        roomAddItem(1, curry); roomAddItem(4, axe); roomAddItem(1, bow);
+        roomAddItem(1,"lamp", "an old oil lamp"); roomAddItem(5,"gold", "a bag of gold");
+        roomAddItem(1, curry);
         //setting room weapons
+        roomAddItem(4, axe); roomAddItem(1, bow);
+        //setting room monsters
+        roomAddMonster(1,tarek);
         //Room descriptions
         roomAddDesc(1, """
                 Light filters into this room from a hole in the ceiling, bathing it in a pale glow.

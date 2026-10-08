@@ -1,31 +1,24 @@
-public class Weapon extends Item {
-    int ammunition = -1;
+public abstract class Weapon extends Item {
+    int damage = 1;
+    String attackVerb;
 
-    // First constructor creates a ranged weapon, if ammo is not set as var 3: weapon is melee
-    public Weapon(String shortName, String longName, int ammunition) {
+
+    public Weapon(String shortName, String longName, String attackVerb, int damage) {
         super(shortName, longName);
-        this.ammunition = (ammunition);
+        this.attackVerb = attackVerb;
+        this.damage = damage;
     }
 
-    public Weapon(String shortName, String longName) {
-        super(shortName, longName);
-        this.ammunition = -1;
-    }
+    //getters
+    public abstract boolean canUse();
+    public abstract int getAmmunition();
 
-    public boolean canUse(){
-        return ammunition != 0;
-    }
+    //attack passes info from the Weapon to higher up methods in an AttackReturn record
+    public abstract AttackReturn attack();
 
-    public boolean isRanged(){
-        return ammunition > 0;
-    }
-
-    public int getAmmunition() {
-        return ammunition;
-    }
-
-    public void modAmmunition(int ammoMod) {
-        this.ammunition = ammunition += ammoMod;
+    @Override
+    public String toString() {
+        return longName;
     }
 }
 

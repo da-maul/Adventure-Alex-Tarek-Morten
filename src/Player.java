@@ -22,6 +22,7 @@ public class Player {
     public int getHealth() {
         return health;
     }
+    public boolean isArmed(){return equippedWeapon != null;}
 
     //setters
     public void setStartingRoom(Room startingRoom) {
@@ -54,10 +55,19 @@ public class Player {
             IO.println("There is a " + currentRoom.getItems().get(0) + " in here...");
         } else {
             IO.println("There are some things in here:");
-            int index = 0;
             for (Item item : currentRoom.getItems()) {
-                IO.println(item); //candidate for adding LONG NAME here
-                index++;
+                IO.println(item);
+            }
+        }
+        if (currentRoom.getMonsters().size() == 0){
+            return;
+        } else if (currentRoom.getMonsters().size() == 1) {
+            IO.println("Watch out! there's "+currentRoom.getMonsters().get(0)+" in here!");
+        }
+        else {
+            IO.println("Theres monsters in here!");
+            for (Monster monster: currentRoom.getMonsters()){
+                IO.println(monster);
             }
         }
     }
@@ -262,25 +272,21 @@ public class Player {
         }
     }
 
-    public void attack(){
-        if (equippedWeapon.canUse()){
-            if (equippedWeapon.isRanged()){
-                //be sure to add target here later
-                IO.println("You shoot your "+ equippedWeapon.getShortName()+" at the air...");
-                equippedWeapon.modAmmunition(-1);
-            }
-            else {
-                //be sure to add target here later
-                IO.println("You swing your "+equippedWeapon.getShortName()+" at the air like you just don´t care...");
+    public AttackReturn attack() {
+        if (equippedWeapon != null) {
+            return equippedWeapon.attack();
+        } else return null;
+    }
+    public Monster monsterSearch(String monsterName) {
+        //lazy rewrite of the itemsearch method, but it will almost certainly work
+        if (monsterName == null || items == null) {
+            return null;
+        }
+        for (Monster monster : currentRoom.getMonsters()) {
+            if (monsterName.equalsIgnoreCase(monster.getShortName())) {
+                return monster;
             }
         }
-        else {
-            if (equippedWeapon.equals(null)){
-                IO.println("You don´t have anything to attack with!");
-            }
-            else {
-                IO.println("Your "+equippedWeapon.getShortName()+" is out of ammo!");
-            }
-        }
+        return null;
     }
 }

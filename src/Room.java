@@ -9,6 +9,7 @@ public class Room {
     private Room west;
     private boolean isLit = true;
     private ArrayList<Item> items = new ArrayList<>();
+    private ArrayList<Monster> monsters = new ArrayList<>();
 
     //Constructor is basic because most of a room is created in the "roomsInit" method in the Adventure class
     public Room(String name){
@@ -29,14 +30,22 @@ public class Room {
         this.isLit = lit;}
     //item related setters
     public void addItem(Item item){items.add(item);}
+    public void addItems(ArrayList<Item> itemList){
+        for (Item item : itemList){
+            items.add(item);
+        }
+    }
     public void addItem(String itemShortName, String itemLongName){addItem(new Item(itemShortName,itemLongName));}
     public void removeItem(Item item){items.remove(item);}
+    public void addMonster(Monster monster){monsters.add(monster);}
+    public void removeMonster(Monster monster){monsters.remove(monster);}
 
     //getters
     public String getName() {return name;}
     public String getDescription() {return description;}
     public boolean isLit() {return isLit;}
     public ArrayList<Item> getItems() {return items;}
+    public ArrayList<Monster> getMonsters(){return monsters;}
 
     //directional getters return this room if no room exists in that direction
     public Room getNorth() {
