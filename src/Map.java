@@ -75,9 +75,9 @@ public class Map {
         //initializing valid weapons
         Weapon bow = new WeaponRanged("bow", "a twangy recurve bow (and some arrows)","fire", 30, 5);
         Weapon axe = new WeaponMelee("axe", "a old rusty axe","swing", 20);
-        Weapon derringer = new WeaponRanged("derringer", "a tiny derringer pistol","shoot",1,2);
+        Weapon derringer = new WeaponRanged("derringer", "a tiny derringer pistol","shoot",100,2);
         //initializing valid monsters
-        Monster tarek = new Monster("tarek", "some guy named Tarek", 1);
+        Monster tarek = new Monster("tarek", "some guy named Tarek", 100);
         tarek.giveWeapon(derringer); tarek.giveItem(tarekBody);
 
         // setting room items

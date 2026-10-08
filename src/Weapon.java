@@ -13,7 +13,8 @@ public abstract class Weapon extends Item {
     public abstract boolean canUse();
     public abstract int getAmmunition();
 
-    public abstract int attack(String target);
+    //attack passes info from the Weapon to higher up methods in an AttackReturn record
+    public abstract AttackReturn attack();
 
     @Override
     public String toString() {

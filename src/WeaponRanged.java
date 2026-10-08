@@ -4,7 +4,7 @@ public class WeaponRanged extends Weapon{
 
     public WeaponRanged(String shortName, String longName, String attackVerb, int damage, int ammunition){
         super(shortName,longName, attackVerb, damage);
-        this.ammunition = ammunition;
+        this.ammunition = ammunition+1;
     }
 
     public void modAmmo(int ammoChange) {this.ammunition += ammoChange;}
@@ -17,12 +17,11 @@ public class WeaponRanged extends Weapon{
     public int getAmmunition() {return ammunition;}
 
     @Override
-    public int attack(String target) {
-        if (target == null){target = "nothing in particular, wasting a shot.";}
-        if (canUse()){
-            IO.println("You "+attackVerb+" your "+shortName+" at "+target);
-            return -damage;
-        }
-        else {IO.println("Your "+shortName+" is out of ammo!");return 0;}
+    public AttackReturn attack() {
+        //giving higher-up attack methods Lego™ pieces they need to build stuff
+        String failTarget = "nothing in particular, wasting a shot.";
+        if (ammunition > 0){ammunition--;}
+        return new AttackReturn(canUse(),attackVerb,shortName,failTarget,damage);
+
     }
 }

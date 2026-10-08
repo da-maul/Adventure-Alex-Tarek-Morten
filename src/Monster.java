@@ -25,6 +25,7 @@ public class Monster {
     public String getLongName() {return longName;}
     public Weapon getWeapon() {return weapon;}
     public ArrayList<Item> getDeathItems() {return deathItems;}
+    public boolean hasItems(){return !deathItems.isEmpty();}
     //setters
     public void modHP(int hpChange) {this.HP += hpChange;}
     public void setHP(int HP) {this.HP = HP;}
@@ -33,8 +34,14 @@ public class Monster {
     public void giveItems(ArrayList<Item> items) {this.deathItems = items;}
     public void giveItem(Item item) {this.deathItems.add(item);}
 
-    public void attack(Player player) {
-        player.modHealth(weapon.attack("you"));
+    public AttackReturn attack() {
+        return weapon.attack();
+    }
+
+    public void dropItems(){
+        for (Item item : deathItems){
+            currentRoom.addItem(item);
+        }
     }
 
     @Override

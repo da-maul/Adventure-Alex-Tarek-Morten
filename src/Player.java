@@ -22,6 +22,7 @@ public class Player {
     public int getHealth() {
         return health;
     }
+    public boolean isArmed(){return equippedWeapon != null;}
 
     //setters
     public void setStartingRoom(Room startingRoom) {
@@ -58,13 +59,14 @@ public class Player {
                 IO.println(item);
             }
         }
-        if (currentRoom.getMonsters().size() == 0) {
+        if (currentRoom.getMonsters().size() == 0){
             return;
         } else if (currentRoom.getMonsters().size() == 1) {
-            IO.println("Watch out! there's " + currentRoom.getMonsters().get(0) + " in here!");
-        } else {
+            IO.println("Watch out! there's "+currentRoom.getMonsters().get(0)+" in here!");
+        }
+        else {
             IO.println("Theres monsters in here!");
-            for (Monster monster : currentRoom.getMonsters()) {
+            for (Monster monster: currentRoom.getMonsters()){
                 IO.println(monster);
             }
         }
@@ -200,19 +202,6 @@ public class Player {
         return null;
     }
 
-    //monsters searching metods
-    public Monster monsterSearch(String monsterName) {
-        if (monsterName == null) {
-            return null;
-        }
-        for (Monster monster : currentRoom.getMonsters()) {
-            if (monsterName.equalsIgnoreCase(monster.getShortName())) {
-                return monster;
-            }
-        }
-        return null;
-    }
-
     public Item itemSelfSearch(String itemName) {
         return itemSearch(items, itemName);
     }
@@ -283,17 +272,21 @@ public class Player {
         }
     }
 
-    public void attack(String desiredTarget) {
-        Monster monster = monsterSearch(desiredTarget);
-        monster.modHP(equippedWeapon.attack(monster.shortName));
-        if (!monster.isDead()) {
-            monster.attack(this);
-        } else {
-            IO.println("You kill the "+monster.getShortName());
-            if (!monster.getDeathItems().isEmpty()){
-                IO.println("It drops some stuff on the floor!");
-            }
-            currentRoom.addItems(monster.getDeathItems());
+    public AttackReturn attack() {
+        if (equippedWeapon != null) {
+            return equippedWeapon.attack();
+        } else return null;
+    }
+    public Monster monsterSearch(String monsterName) {
+        //lazy rewrite of the itemsearch method, but it will almost certainly work
+        if (monsterName == null || items == null) {
+            return null;
         }
+        for (Monster monster : currentRoom.getMonsters()) {
+            if (monsterName.equalsIgnoreCase(monster.getShortName())) {
+                return monster;
+            }
+        }
+        return null;
     }
 }
