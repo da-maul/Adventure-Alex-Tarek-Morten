@@ -42,6 +42,7 @@ public class Monster {
         for (Item item : deathItems){
             currentRoom.addItem(item);
         }
+        currentRoom.addItem(weapon);
     }
 
     @Override
